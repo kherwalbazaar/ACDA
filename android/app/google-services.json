@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "347219258331",
+    "firebase_url": "https://akhadua-sambalpuri-default-rtdb.firebaseio.com",
+    "project_id": "akhadua-sambalpuri",
+    "storage_bucket": "akhadua-sambalpuri.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:347219258331:android:68bdbda52fe0a693f995fe",
+        "android_client_info": {
+          "package_name": "com.akhadua.sambalpuri"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAo8EZyXkATsL-k2IGGMwTE3BeaS6lQ9wo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
