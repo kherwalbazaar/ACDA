@@ -15,7 +15,7 @@ const lastPaidLabel = (m: EnrichedMember) => {
 
 export function WhatsAppContactList() {
   const [searchQuery, setSearchQuery] = useState("")
-  const [activeFilter, setActiveFilter] = useState<"all" | "executive" | "paid" | "pending">("all")
+  const [activeFilter, setActiveFilter] = useState<"all" | "paid" | "pending">("all")
   const { members: enrichedMembers } = useMembers()
 
   // Filtered members list
@@ -26,10 +26,6 @@ export function WhatsAppContactList() {
         m.designation.toLowerCase().includes(searchQuery.toLowerCase())
 
       if (!matchesSearch) return false
-
-      if (activeFilter === "executive") {
-        return m.designation === "President" || m.designation === "Secretary" || m.designation.includes("Executive")
-      }
       if (activeFilter === "paid") return m.status === "paid"
       if (activeFilter === "pending") return m.status === "pending"
 
@@ -71,10 +67,9 @@ export function WhatsAppContactList() {
 
         {/* WhatsApp Filter Tabs + Total Collection (horizontal) */}
         <div className="flex items-center justify-between gap-3 pt-1">
-          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar flex-1 min-w-0 justify-center">
+          <div className="flex items-center gap-1.5 flex-1 min-w-0">
             {[
               { id: "all", label: `All (${enrichedMembers.length})` },
-              { id: "executive", label: "Executive" },
               { id: "paid", label: "Paid" },
               { id: "pending", label: "Pending" },
             ].map((tab) => {
@@ -83,7 +78,7 @@ export function WhatsAppContactList() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveFilter(tab.id as any)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all active:scale-95 ${
+                  className={`flex-1 min-w-0 px-2 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap truncate text-center transition-all active:scale-95 sm:px-3 ${
                     active
                       ? "bg-white text-emerald-800 shadow-xs"
                       : "bg-emerald-700/60 text-emerald-100 hover:bg-emerald-700"
@@ -97,11 +92,11 @@ export function WhatsAppContactList() {
 
           {/* Total Collection */}
           <div className="shrink-0 pt-0.5">
-            <div className="bg-white rounded-xl border-2 border-emerald-300 px-3 py-1.5 shadow-sm text-center">
+            <div className="bg-white rounded-xl border-2 border-emerald-300 px-3 py-1.5 shadow-sm text-center min-w-0">
               <p className="text-[10px] text-emerald-700 font-bold leading-tight uppercase tracking-wide">
 Collection
               </p>
-              <p className="text-lg font-black text-emerald-800 leading-tight">{formatINR(totalCollection)}</p>
+              <p className="text-lg font-black text-emerald-800 leading-tight truncate">{formatINR(totalCollection)}</p>
             </div>
           </div>
         </div>
