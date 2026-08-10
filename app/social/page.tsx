@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Social Activity Program | ADIM LAKCHAR CHIRGAL GAONTA",
+  title: "Social Activity Program",
 }
 
 export default function SocialPage() {

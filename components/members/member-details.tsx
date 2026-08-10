@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { ArrowLeft, Phone, Wallet, Calendar, UserX, Plus, X, Loader2 } from "lucide-react"
+import { ArrowLeft, Phone, Wallet, Calendar, UserX, Plus, X, Loader2, Mail, IdCard, BadgeCheck, PartyPopper } from "lucide-react"
 import { formatINR, formatDate, type Payment } from "@/data/members"
-import { formatPhone } from "@/components/members/status-badge"
+import { formatPhone, StatusBadge } from "@/components/members/status-badge"
 import { MemberAvatar } from "@/components/members/member-avatar"
 import { useMemberById, useMembers } from "@/lib/firebase-data"
 import { toast } from "sonner"
@@ -111,6 +111,9 @@ export function MemberDetails({ memberId }: { memberId: string }) {
         />
         <h1 className="text-xl font-bold text-slate-900 mt-3">{active.name}</h1>
         <p className="text-xs font-medium text-slate-500 mt-0.5">{active.designation}</p>
+        <div className="flex items-center justify-center mt-1.5">
+          <StatusBadge member={active} />
+        </div>
 
         <div className="flex items-center justify-center gap-8 mt-4 pt-3 border-t border-slate-100">
           <div className="flex flex-col items-center gap-1.5">
@@ -125,6 +128,34 @@ export function MemberDetails({ memberId }: { memberId: string }) {
             </span>
             <span className="text-[10px] font-semibold text-slate-500">{formatINR(total)}</span>
           </div>
+        </div>
+      </section>
+
+      {/* All details */}
+      <section className="px-4 mt-5">
+        <h3 className="text-sm font-bold text-slate-900 tracking-wide mb-2 flex items-center gap-1.5">
+          <IdCard className="w-4 h-4 text-emerald-600" />
+          Member Details
+        </h3>
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm divide-y divide-slate-100">
+          <DetailRow icon={<IdCard className="w-4 h-4" />} label="Member ID" value={active.id} mono />
+          <DetailRow icon={<BadgeCheck className="w-4 h-4" />} label="Membership Fee" value={formatINR(active.membershipFee)} />
+          <DetailRow icon={<Wallet className="w-4 h-4" />} label="Total Paid" value={formatINR(active.totalPaid)} accent="text-emerald-700" />
+          <DetailRow icon={<Calendar className="w-4 h-4" />} label="Due Amount" value={formatINR(active.due)} accent={active.due > 0 ? "text-rose-600" : "text-emerald-700"} />
+          <DetailRow icon={<BadgeCheck className="w-4 h-4" />} label="Payments Made" value={String(active.paymentCount)} />
+          <DetailRow
+            icon={<Calendar className="w-4 h-4" />}
+            label="Last Payment"
+            value={active.lastPayment ? `${formatINR(active.lastPayment.amount)} • ${formatDate(active.lastPayment.date)}` : "—"}
+          />
+          <DetailRow icon={<Phone className="w-4 h-4" />} label="Phone" value={formatPhone(active.phone)} />
+          <DetailRow icon={<Mail className="w-4 h-4" />} label="Email" value={active.email || "—"} />
+          {active.birthday && (
+            <DetailRow icon={<PartyPopper className="w-4 h-4" />} label="Birthday" value={formatDate(active.birthday)} />
+          )}
+          {(active.categories || []).length > 0 && (
+            <DetailRow icon={<BadgeCheck className="w-4 h-4" />} label="Categories" value={active.categories.join(", ")} />
+          )}
         </div>
       </section>
 
@@ -255,6 +286,32 @@ export function MemberDetails({ memberId }: { memberId: string }) {
           </div>
         </div>
       )}
+    </div>
+  )
+}
+
+function DetailRow({
+  icon,
+  label,
+  value,
+  accent = "text-slate-900",
+  mono,
+}: {
+  icon: React.ReactNode
+  label: string
+  value: string
+  accent?: string
+  mono?: boolean
+}) {
+  return (
+    <div className="flex items-center gap-3 px-4 py-3">
+      <span className="h-8 w-8 rounded-lg bg-slate-50 text-slate-500 flex items-center justify-center shrink-0">
+        {icon}
+      </span>
+      <div className="flex-1 min-w-0">
+        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide">{label}</p>
+        <p className={`text-sm font-semibold truncate ${accent} ${mono ? "font-mono" : ""}`}>{value}</p>
+      </div>
     </div>
   )
 }

@@ -22,7 +22,7 @@ export function AndroidTopBar() {
           <div className="w-9 h-9 rounded-full bg-white p-0.5 shadow-sm overflow-hidden flex-shrink-0 border border-emerald-500">
             <Image
               src="/mandawa-logo.jpg"
-              alt="ADIM LAKCHAR CHIRGAL GAONTA"
+              alt="ADIM LAHAH MANDAWA"
               width={36}
               height={36}
               className="object-cover w-full h-full rounded-full"
@@ -30,11 +30,11 @@ export function AndroidTopBar() {
           </div>
           <div className="flex flex-col leading-tight">
             <span className="font-extrabold text-sm sm:text-base tracking-wide bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300 bg-clip-text text-transparent">
-              ALCGG
+              ALM
             </span>
             <span className="text-[10px] text-slate-300 font-medium tracking-wider flex items-center gap-1">
               <ShieldCheck className="w-2.5 h-2.5 text-emerald-400 inline" />
-              ALCGG ORG
+              ALM ORG
             </span>
           </div>
         </Link>

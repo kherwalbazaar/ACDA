@@ -1,3 +1,9 @@
+/**
+ * @file whatsapp-contact-list.tsx
+ * @description Provides a WhatsApp-styled contact list for ACDA members,
+ * including search, filtering by payment status, and collection summary.
+ */
+
 "use client"
 
 import React, { useState, useMemo } from "react"
@@ -7,12 +13,33 @@ import { Search, ShieldCheck, CheckCircle2, AlertCircle, UserCheck, ChevronRight
 import { MemberAvatar } from "@/components/members/member-avatar"
 import { useMembers } from "@/lib/firebase-data"
 
+/**
+ * Helper function to format the last payment date of a member.
+ *
+ * @param m - The enriched member object.
+ * @returns A formatted date string in 'en-IN' locale (e.g., "15 August 2023") or "—" if no date is found.
+ */
 const lastPaidLabel = (m: EnrichedMember) => {
   const raw = m.lastPayment?.date || m.paidDate
   if (!raw) return "—"
   return new Date(raw).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })
 }
 
+/**
+ * WhatsAppContactList Component
+ *
+ * This component renders a list of members in a style similar to WhatsApp's contact list.
+ * It includes a search bar, filtering options (All, Paid, Pending), and displays member
+ * information such as name, designation, last payment date, and total amount paid.
+ *
+ * Features:
+ * - Search by name or designation.
+ * - Filter by payment status.
+ * - Visual indicators for payment status (green/amber dots and badges).
+ * - Displays total collection amount in the header.
+ *
+ * @returns A React component representing the member contact list.
+ */
 export function WhatsAppContactList() {
   const [searchQuery, setSearchQuery] = useState("")
   const [activeFilter, setActiveFilter] = useState<"all" | "paid" | "pending">("all")
@@ -41,7 +68,7 @@ export function WhatsAppContactList() {
       <div className="bg-emerald-800 text-white px-4 pt-4 pb-3 shadow-md">
         <div className="flex items-center justify-center mb-3">
           <h2 className="text-lg font-extrabold leading-tight tracking-wide uppercase text-center">
-            ADIM CULTURE AND DEVELOPMENT ASSOCIATION
+            ADIM LAHAH MANDAWA
           </h2>
         </div>
 

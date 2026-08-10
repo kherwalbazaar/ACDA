@@ -1,7 +1,7 @@
 import TicketsPageClient from "@/components/event-ticket/TicketsPageClient"
 
 export const metadata = {
-  title: "Event Ticket | ADIM LAKCHAR CHIRGAL GAONTA",
+  title: "Event Ticket",
 }
 
 type EventItem = {

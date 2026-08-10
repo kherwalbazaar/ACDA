@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Education Program | ADIM LAKCHAR CHIRGAL GAONTA",
+  title: "Education Program",
 }
 
 export default function EducationPage() {

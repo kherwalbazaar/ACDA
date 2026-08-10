@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Members | ADIM LAKCHAR CHIRGAL GAONTA",
+  title: "Members",
 }
 
 import { MembersList } from "@/components/members/members-list"

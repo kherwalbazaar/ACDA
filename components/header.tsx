@@ -90,7 +90,7 @@ export function Header() {
             <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center">
               <Image
                 src="/mandawa-logo.jpg"
-                alt="ADIM LAKCHAR CHIRGAL GAONTA Logo"
+                alt="ADIM LAHAH MANDAWA Logo"
                 width={96}
                 height={96}
                 className="object-contain"
@@ -100,10 +100,10 @@ export function Header() {
 
           {/* Center Title */}
           <div className="text-center flex-1 mx-1 sm:mx-3 md:mx-8">
-            <h1 className="mb-1 font-extrabold tracking-tight text-base sm:text-lg md:text-2xl lg:text-3xl bg-gradient-to-r from-teal-600 via-purple-600 to-pink-600 bg-clip-text text-transparent whitespace-nowrap">
-              ADIM LAKCHAR CHIRGAL GAONTA
+            <h1 className="mb-1 font-extrabold tracking-tight text-2xl sm:text-3xl md:text-4xl lg:text-5xl bg-gradient-to-r from-teal-600 via-purple-600 to-pink-600 bg-clip-text text-transparent whitespace-nowrap">
+              ADIM LAHAH MANDAWA
             </h1>
-            <p className="text-[10px] sm:text-xs md:text-sm font-semibold text-green-800 whitespace-nowrap">Adim Culture and Development Association</p>
+            <p className="text-[10px] sm:text-xs md:text-sm font-semibold text-green-800 whitespace-nowrap">ADIM LAHAH MANDAWA</p>
             <p className="text-[10px] sm:text-xs md:text-sm font-semibold text-blue-800 whitespace-nowrap">Regd. No. :- MBJ-3088-27 of 1992-93, Under Societies Act XXI of 1860</p>
             <p className="text-[10px] sm:text-xs md:text-sm font-semibold text-red-800 whitespace-nowrap">Bahanada, Simagadia, Khunta, Mayurbhanj, Odisha-757104</p>
           </div>
@@ -112,7 +112,7 @@ export function Header() {
             <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 flex items-center justify-center">
               <Image
                 src="/mandawa-logo.jpg"
-                alt="ADIM LAKCHAR CHIRGAL GAONTA Logo"
+                alt="ADIM LAHAH MANDAWA Logo"
                 width={96}
                 height={96}
                 className="object-contain"

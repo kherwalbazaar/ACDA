@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-    <string name="app_name">ADIM LAKCHAR CHIRGAL GAONTA</string>
-    <string name="title_activity_main">ADIM LAKCHAR CHIRGAL GAONTA</string>
+    <string name="app_name">ADIM LAHAH MANDAWA</string>
+    <string name="title_activity_main">ADIM LAHAH MANDAWA</string>
     <string name="package_name">com.akhadua.sambalpuri</string>
     <string name="custom_url_scheme">com.akhadua.sambalpuri</string>
 </resources>

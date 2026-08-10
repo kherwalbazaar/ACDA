@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Cultural Program | ADIM LAKCHAR CHIRGAL GAONTA",
+  title: "Cultural Program",
 }
 
 export default function CulturalPage() {

@@ -22,7 +22,7 @@ export function AddMemberForm() {
   }, [])
   const [designation, setDesignation] = useState("General Member")
   const [phone, setPhone] = useState("")
-  const [membershipFee, setMembershipFee] = useState("3000")
+  const [membershipFee, setMembershipFee] = useState("2000")
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -37,7 +37,7 @@ export function AddMemberForm() {
       designation: designation.trim() || "General Member",
       phone: phone.trim(),
       image: "",
-      membershipFee: Math.max(0, Number(membershipFee) || 3000),
+      membershipFee: Math.max(0, Number(membershipFee) || 2000),
       paymentHistory: [],
       categories: ["pending"],
     }
@@ -72,7 +72,7 @@ export function AddMemberForm() {
             <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="e.g. 9000012345" className={inputCls} inputMode="numeric" />
           </Field>
           <Field label="Membership Fee (₹)">
-            <input value={membershipFee} onChange={(e) => setMembershipFee(e.target.value)} placeholder="3000" className={inputCls} inputMode="numeric" />
+            <input value={membershipFee} onChange={(e) => setMembershipFee(e.target.value)} placeholder="2000" className={inputCls} inputMode="numeric" />
           </Field>
         </div>
 

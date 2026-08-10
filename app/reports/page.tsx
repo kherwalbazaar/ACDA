@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Reports | ADIM LAKCHAR CHIRGAL GAONTA",
+  title: "Reports",
 }
 
 export default function ReportsPage() {

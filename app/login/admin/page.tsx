@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Admin Login | ADIM LAKCHAR CHIRGAL GAONTA",
+  title: "Admin Login",
 }
 
 export default function AdminLoginPage() {

@@ -21,6 +21,7 @@ export type CashTxn = {
   description: string
   type: "Income" | "Expense"
   amount: number
+  via?: string
 }
 
 export type EventItem = {

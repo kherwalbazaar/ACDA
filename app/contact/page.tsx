@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Contact Us | ADIM LAKCHAR CHIRGAL GAONTA",
+  title: "Contact Us",
 }
 
 export default function ContactPage() {

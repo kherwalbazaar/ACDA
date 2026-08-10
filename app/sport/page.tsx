@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Sport & Youth Development | ADIM LAKCHAR CHIRGAL GAONTA",
+  title: "Sport & Youth Development",
 }
 
 export default function SportPage() {

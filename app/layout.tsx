@@ -13,26 +13,24 @@ import { PwaRegister } from "@/components/PwaRegister"
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://localhost:3000"),
   title: {
-    default: "ADIM LAKCHAR CHIRGAL GAONTA - Adim Culture and Development Association",
-    template: "%s | ADIM MANDAWA",
+    default: "ADIM LAHAH MANDAWA - ADIM LAHAH MANDAWA",
+    template: "%s | ADIM LAHAH MANDAWA",
   },
   description:
-    "ADIM LAHAH MANDAWA - Official app of the Adim Culture and Development Association for members, fee collections, cash book, events and community updates.",
+    "ADIM LAHAH MANDAWA - Official app of the ADIM LAHAH MANDAWA for members, fee collections, cash book, events and community updates.",
   keywords: [
     "adim",
     "mandawa",
-    "alakchar",
-    "chirgal",
-    "gaonta",
+    "lahah",
     "adim culture",
     "development association",
     "community",
   ],
-  applicationName: "ADIM MANDAWA",
+  applicationName: "ADIM LAHAH MANDAWA",
   generator: "v0.app",
-  authors: [{ name: "ADIM MANDAWA" }],
-  creator: "ADIM MANDAWA",
-  publisher: "ADIM MANDAWA",
+  authors: [{ name: "ADIM LAHAH MANDAWA" }],
+  creator: "ADIM LAHAH MANDAWA",
+  publisher: "ADIM LAHAH MANDAWA",
   category: "community",
   manifest: "/manifest.json",
   icons: {
@@ -41,7 +39,7 @@ export const metadata: Metadata = {
   },
   appleWebApp: {
     capable: true,
-    title: "ADIM MANDAWA",
+    title: "ADIM LAHAH MANDAWA",
     statusBarStyle: "black-translucent",
   },
   formatDetection: {
@@ -52,15 +50,15 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_IN",
-    siteName: "ADIM MANDAWA",
-    title: "ADIM CULTURE AND DEVELOPMENT ASSOCIATION",
+    siteName: "ADIM LAHAH MANDAWA",
+    title: "ADIM LAHAH MANDAWA",
     description:
-      "Official app of the Adim Culture and Development Association for members, events, cash book and community updates.",
+      "Official app of the ADIM LAHAH MANDAWA for members, events, cash book and community updates.",
     images: ["/icon-512.png"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "ADIM CULTURE AND DEVELOPMENT ASSOCIATION",
+    title: "ADIM LAHAH MANDAWA",
     description:
       "Official app for members, events, cash book and community updates.",
     images: ["/icon-512.png"],
@@ -95,7 +93,7 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="ADIM MANDAWA" />
+        <meta name="apple-mobile-web-app-title" content="ADIM LAHAH MANDAWA" />
         <link rel="apple-touch-icon" href="/icon-192.png" />
         <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
       </head>

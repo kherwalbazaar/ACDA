@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, Wallet, Pencil, X, Trash2 } from "lucide-react"
 import { toast } from "sonner"
-import { useCashBook } from "@/lib/firebase-data"
+import { useCashBook, useMembers } from "@/lib/firebase-data"
 import { setNavbarForcedHidden } from "@/hooks/navbar-store"
 import { formatINR } from "@/data/members"
 
@@ -23,8 +23,10 @@ function formatDate(d: string) {
 export function AddExpenseForm() {
   const router = useRouter()
   const { txns, addTxn, updateTxn, deleteTxn } = useCashBook()
+  const { members } = useMembers()
   const [description, setDescription] = useState("")
   const [amount, setAmount] = useState("")
+  const [via, setVia] = useState("")
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
   const [editingId, setEditingId] = useState<string | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
@@ -42,6 +44,7 @@ export function AddExpenseForm() {
   const resetForm = () => {
     setDescription("")
     setAmount("")
+    setVia("")
     setDate(new Date().toISOString().slice(0, 10))
     setEditingId(null)
   }
@@ -52,6 +55,7 @@ export function AddExpenseForm() {
     setEditingId(id)
     setDescription(t.description)
     setAmount(String(t.amount))
+    setVia(t.via || "")
     setDate(t.date.slice(0, 10))
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
@@ -73,6 +77,7 @@ export function AddExpenseForm() {
       description: description.trim(),
       type: "Expense" as const,
       amount: amt,
+      via: via || undefined,
     }
 
     if (editingId) {
@@ -141,6 +146,21 @@ export function AddExpenseForm() {
                 required
               />
             </div>
+            <div>
+              <label className="text-[11px] font-semibold text-slate-600 mb-1 block">Via</label>
+              <select
+                value={via}
+                onChange={(e) => setVia(e.target.value)}
+                className={inputCls}
+              >
+                <option value="">Select member</option>
+                {members.map((m) => (
+                  <option key={m.id} value={m.name}>
+                    {m.name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             {editingId ? (
               <div className="flex items-center gap-2">
@@ -194,6 +214,7 @@ export function AddExpenseForm() {
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-slate-900 truncate">{t.description}</p>
                 <p className="text-[11px] text-slate-400">{formatDate(t.date)}</p>
+                {t.via && <span className="mt-0.5 inline-block text-[10px] font-semibold text-emerald-700 bg-emerald-50 rounded-full px-1.5 py-0.5">Via: {t.via}</span>}
               </div>
               <span className="text-sm font-bold text-rose-600 whitespace-nowrap">-{formatINR(t.amount)}</span>
               <button

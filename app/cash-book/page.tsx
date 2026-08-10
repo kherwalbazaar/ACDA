@@ -22,7 +22,7 @@ export default function CashBookPage() {
   const collection = members.reduce((s, m) => s + (m.totalPaid || 0), 0)
   const expense = txns.filter((t) => t.type === "Expense").reduce((s, t) => s + t.amount, 0)
 
-  type Entry = { id: string; date: string; description: string; type: "Income" | "Expense"; amount: number; running?: number }
+  type Entry = { id: string; date: string; description: string; type: "Income" | "Expense"; amount: number; via?: string; running?: number }
 
   const memberPayments: Entry[] = members.flatMap((m) =>
     (m.paymentHistory || []).map((p) => ({
@@ -34,7 +34,7 @@ export default function CashBookPage() {
     }))
   )
 
-  const raw = [...txns.map((t) => ({ id: t.id, date: t.date, description: t.description, type: t.type, amount: t.amount })), ...memberPayments].sort((a, b) =>
+  const raw = [...txns.map((t) => ({ id: t.id, date: t.date, description: t.description, type: t.type, amount: t.amount, via: t.via })), ...memberPayments].sort((a, b) =>
     (a.date || "").localeCompare(b.date || "")
   )
 
@@ -108,8 +108,9 @@ export default function CashBookPage() {
                   <div key={t.id} className="flex items-center gap-3 px-3 py-2.5">
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-slate-900 truncate">{t.description}</p>
+                      {t.via && <span className="inline-block mt-0.5 text-[10px] font-semibold text-emerald-700 bg-emerald-50 rounded-full px-1.5 py-0.5">Via: {t.via}</span>}
                       <span
-                        className={`inline-block mt-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${
+                        className={`inline-block mt-0.5 ml-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${
                           t.type === "Income" ? "bg-emerald-50 text-emerald-700" : "bg-rose-50 text-rose-700"
                         }`}
                       >
