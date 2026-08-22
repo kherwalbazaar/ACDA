@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useEvents } from "@/lib/firebase-data"
+import { useBackHandler } from "@/hooks/use-back-handler"
 
 export type EventItem = {
   id: string
@@ -99,6 +100,8 @@ export default function TicketsPageClient() {
   const [qty, setQty] = useState<number>(1)
   const [payment, setPayment] = useState<string>("upi")
   const [confirmCode, setConfirmCode] = useState<string>("")
+
+  useBackHandler(!!openForId, () => resetDialog())
 
   useEffect(() => {
     if (fbEvents && fbEvents.length > 0) setEvents(fbEvents)

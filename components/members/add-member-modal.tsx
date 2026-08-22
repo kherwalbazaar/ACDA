@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useMembers } from "@/lib/firebase-data"
 import { toast } from "sonner"
 import type { Member } from "@/data/members"
+import { useBackHandler } from "@/hooks/use-back-handler"
 
 export function AddMemberModal({
   open: controlledOpen,
@@ -20,6 +21,8 @@ export function AddMemberModal({
   }
   const { addMember } = useMembers()
   const [name, setName] = useState("")
+
+  useBackHandler(open, () => setOpen(false))
   const [mobile, setMobile] = useState("")
   const [designation, setDesignation] = useState("Member")
   const [imageUrl, setImageUrl] = useState("")

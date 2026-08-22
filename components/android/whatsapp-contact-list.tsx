@@ -7,9 +7,8 @@
 "use client"
 
 import React, { useState, useMemo } from "react"
-import Link from "next/link"
-import { formatINR, type EnrichedMember } from "@/data/members"
-import { Search, ShieldCheck, CheckCircle2, AlertCircle, UserCheck, ChevronRight, X } from "lucide-react"
+import { formatDate, formatINR, type EnrichedMember } from "@/data/members"
+import { Search, CheckCircle2, AlertCircle, UserCheck, ChevronDown, X } from "lucide-react"
 import { MemberAvatar } from "@/components/members/member-avatar"
 import { useMembers } from "@/lib/firebase-data"
 
@@ -43,6 +42,7 @@ const lastPaidLabel = (m: EnrichedMember) => {
 export function WhatsAppContactList() {
   const [searchQuery, setSearchQuery] = useState("")
   const [activeFilter, setActiveFilter] = useState<"all" | "paid" | "pending">("all")
+  const [expandedMemberId, setExpandedMemberId] = useState<string | null>(null)
   const { members: enrichedMembers } = useMembers()
 
   // Filtered members list
@@ -137,12 +137,18 @@ Collection
             <p className="text-sm font-medium">No contacts match your search.</p>
           </div>
         ) : (
-          filteredMembers.map((m) => (
-            <Link
+          filteredMembers.map((m) => {
+            const expanded = expandedMemberId === m.id
+            const paymentHistory = m.paymentHistory || []
+            const paymentTotal = paymentHistory.reduce((sum, payment) => sum + (payment.amount || 0), 0)
+
+            return (
+            <article
               key={m.id}
-              href={`/profile/member?id=${m.id}&src=home`}
-              className="flex items-center justify-between p-3.5 hover:bg-slate-50 active:bg-slate-100/80 cursor-pointer transition-colors group border-b-2 border-emerald-200"
+              onClick={() => setExpandedMemberId(expanded ? null : m.id)}
+              className={`${expanded ? "bg-emerald-100 border-emerald-300" : "bg-white border-emerald-200"} hover:bg-emerald-200 active:bg-emerald-300 cursor-pointer transition-colors group border-b-2`}
             >
+              <div className="flex items-center justify-between p-3.5">
               {/* Left: Avatar with Online Dot */}
               <div className="flex items-center gap-3 min-w-0 flex-1">
                 <div className="relative flex-shrink-0">
@@ -162,7 +168,7 @@ Collection
                 {/* Contact Info */}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5">
-                    <span className="font-bold text-sm text-slate-900 truncate leading-snug group-hover:text-emerald-700 transition-colors">
+                    <span className={`font-bold text-sm truncate leading-snug transition-colors ${expanded ? "text-emerald-950" : "text-slate-900 group-hover:text-emerald-700"}`}>
                       {m.name}
                     </span>
                     {m.designation === "President" && (
@@ -176,10 +182,10 @@ Collection
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-slate-500 truncate mt-0.5 font-medium flex items-center gap-1">
+                  <p className={`text-xs truncate mt-0.5 font-medium flex items-center gap-1 ${expanded ? "text-emerald-800" : "text-slate-500"}`}>
                     <span>{m.designation}</span>
-                    <span className="text-slate-300">•</span>
-                    <span className="text-[11px] text-slate-400">
+                    <span className={expanded ? "text-emerald-400" : "text-slate-300"}>•</span>
+                    <span className={`text-[11px] ${expanded ? "text-emerald-700" : "text-slate-400"}`}>
                       {m.status === "paid" ? `Last Paid: ${lastPaidLabel(m)}` : "Pending"}
                     </span>
                   </p>
@@ -203,10 +209,46 @@ Collection
                   <AlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0" />
                 )}
 
-                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-transform group-hover:translate-x-0.5" />
+                <ChevronDown className={`w-5 h-5 transition-transform ${expanded ? "rotate-180 text-emerald-700" : "text-slate-400"}`} aria-hidden="true" />
               </div>
-            </Link>
-          ))
+              </div>
+
+              {expanded && (
+                <div className="border-t border-emerald-200 bg-emerald-50 px-5 py-4" onClick={(event) => event.stopPropagation()}>
+                  <div className="grid grid-cols-2 gap-x-5 gap-y-4 text-sm">
+                    {m.phone && <div>
+                      <span className="block text-xs font-semibold uppercase tracking-wide text-emerald-700">Phone</span>
+                      <span className="text-sm font-medium text-slate-700">{m.phone}</span>
+                    </div>}
+                    {m.email && <div>
+                      <span className="block text-xs font-semibold uppercase tracking-wide text-emerald-700">Email</span>
+                      <span className="break-all text-sm font-medium text-slate-700">{m.email}</span>
+                    </div>}
+                  </div>
+
+                  {paymentHistory.length > 0 && <div className="mt-5 border-t border-emerald-200 pt-3">
+                    <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wide text-emerald-700">
+                      <span>Date</span>
+                      <span>Total Paid</span>
+                    </div>
+                    <div className="mt-2 border-t border-emerald-200">
+                      {paymentHistory.map((payment) => (
+                        <div key={payment.id} className="flex items-center justify-between gap-3 border-b border-emerald-200 py-2.5 text-sm">
+                          <span className="min-w-0 truncate text-slate-600">{formatDate(payment.date)}</span>
+                          <span className="shrink-0 font-bold text-emerald-700">{formatINR(payment.amount)}</span>
+                        </div>
+                      ))}
+                      <div className="flex items-center justify-between gap-3 pt-3 text-sm font-bold text-slate-800">
+                        <span>Total Paid</span>
+                        <span className="text-emerald-700">{formatINR(paymentTotal)}</span>
+                      </div>
+                    </div>
+                  </div>}
+                </div>
+              )}
+            </article>
+            )
+          })
         )}
       </div>
     </div>
