@@ -7,6 +7,7 @@ import { toast } from "sonner"
 import { useCashBook, useMembers } from "@/lib/firebase-data"
 import { setNavbarForcedHidden } from "@/hooks/navbar-store"
 import { formatINR } from "@/data/members"
+import { useBackHandler } from "@/hooks/use-back-handler"
 
 const inputCls =
   "w-full bg-white text-slate-900 placeholder-slate-400 px-4 py-3 rounded-xl text-sm border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -30,6 +31,8 @@ export function AddExpenseForm() {
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
   const [editingId, setEditingId] = useState<string | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
+
+  useBackHandler(!!deleteTarget, () => setDeleteTarget(null))
 
   const expenses = txns
     .filter((t) => t.type === "Expense")

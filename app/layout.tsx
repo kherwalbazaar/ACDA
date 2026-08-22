@@ -1,5 +1,5 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
 import { Analytics } from "@vercel/analytics/next"
@@ -67,11 +67,12 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-  },
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 }
 
 export default function RootLayout({
@@ -104,7 +105,7 @@ export default function RootLayout({
           <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
         </AppShell>
         <Toaster />
-        <Analytics />
+        {typeof window !== "undefined" && !window.hasOwnProperty("Capacitor") && <Analytics />}
       </body>
     </html>
   )

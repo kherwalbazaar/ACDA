@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { database } from "./firebase"
-import { ref, set, update, remove, push, onValue, off } from "firebase/database"
+import { ref, set, update, remove, push, onValue } from "firebase/database"
 import type { Member, EnrichedMember } from "@/data/members"
 
 export type CommunityMessage = {
@@ -42,7 +42,7 @@ export type OrgSettings = {
 function toArray<T>(val: Record<string, T> | T[] | null | undefined): T[] {
   if (!val) return []
   if (Array.isArray(val)) return val
-  return Object.values(val)
+  return Object.entries(val).map(([id, v]) => ({ ...(v as object), id })) as T[]
 }
 
 function enrichMembers(records: Record<string, Member> | null): EnrichedMember[] {
@@ -94,7 +94,6 @@ export function useMembers() {
       () => setLoading(false)
     )
     return () => {
-      off(ref(database, "members"))
       un()
     }
   }, [])
@@ -127,7 +126,6 @@ export function useCommunityChat() {
     const r = ref(database, "chat/community")
     const un = onValue(r, (snap) => setMessages(toArray<CommunityMessage>(snap.val())))
     return () => {
-      off(r)
       un()
     }
   }, [])
@@ -147,12 +145,9 @@ export function useCashBook() {
   useEffect(() => {
     const r = ref(database, "cashBook")
     const un = onValue(r, (snap) => {
-      const val = snap.val()
-      const arr = val && typeof val === "object" ? Object.entries(val).map(([id, t]) => ({ ...(t as object), id })) : []
-      setTxns(arr as CashTxn[])
+      setTxns(toArray<CashTxn>(snap.val()))
     })
     return () => {
-      off(r)
       un()
     }
   }, [])
@@ -181,7 +176,6 @@ export function useEvents() {
     const r = ref(database, "events")
     const un = onValue(r, (snap) => setEvents(toArray<EventItem>(snap.val())))
     return () => {
-      off(r)
       un()
     }
   }, [])
@@ -202,7 +196,6 @@ export function useSettings() {
     const r = ref(database, "settings")
     const un = onValue(r, (snap) => setSettings(snap.val()))
     return () => {
-      off(r)
       un()
     }
   }, [])

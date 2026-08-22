@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react"
 import { MessageCircle, Send, ShieldCheck, CheckCheck, ArrowLeft, Plus, User } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useCommunityChat } from "@/lib/firebase-data"
+import { useBackHandler } from "@/hooks/use-back-handler"
 
 export default function ChatPage() {
   const router = useRouter()
@@ -13,6 +14,11 @@ export default function ChatPage() {
   const [uid, setUid] = useState<string>("")
   const [myName, setMyName] = useState<string | null>(null)
   const [nameInput, setNameInput] = useState("")
+
+  useBackHandler(!myName, () => {
+    // If name modal is open, back goes home (or wherever it came from)
+    router.back()
+  })
 
   useEffect(() => {
     let id = localStorage.getItem("chat_uid")
@@ -134,7 +140,7 @@ export default function ChatPage() {
                   alt={msg.sender}
                   className="w-full h-full object-cover"
                   onError={(e) => {
-                    ;(e.target as any).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(msg.sender)}&background=0D9488&color=fff`
+                    ;(e.currentTarget as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(msg.sender)}&background=0D9488&color=fff`
                   }}
                 />
               </div>

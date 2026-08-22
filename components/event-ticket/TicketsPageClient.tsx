@@ -73,16 +73,35 @@ function daysUntil(dt: string) {
   return Math.ceil(diff / (1000 * 60 * 60 * 24))
 }
 
+const DEFAULT_EVENTS: EventItem[] = [
+  {
+    id: "evt-1",
+    name: "Cultural Performance Night",
+    datetime: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7).toISOString(),
+    price: 199,
+    available: 120,
+    venue: "Community Hall, Khunta",
+  },
+  {
+    id: "evt-2",
+    name: "Educational Workshop",
+    datetime: new Date(Date.now() + 1000 * 60 * 60 * 24 * 20).toISOString(),
+    price: 149,
+    available: 60,
+    venue: "ADIM LAHAH Campus",
+  },
+]
+
 export default function TicketsPageClient() {
   const { events: fbEvents } = useEvents()
-  const [events, setEvents] = useState<EventItem[]>([])
+  const [events, setEvents] = useState<EventItem[]>(DEFAULT_EVENTS)
   const [openForId, setOpenForId] = useState<string | null>(null)
   const [qty, setQty] = useState<number>(1)
   const [payment, setPayment] = useState<string>("upi")
   const [confirmCode, setConfirmCode] = useState<string>("")
 
   useEffect(() => {
-    if (fbEvents.length) setEvents(fbEvents)
+    if (fbEvents && fbEvents.length > 0) setEvents(fbEvents)
   }, [fbEvents])
 
   const current = useMemo(() => events.find(e => e.id === openForId) || null, [events, openForId])

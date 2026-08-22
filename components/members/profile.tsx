@@ -24,6 +24,7 @@ import { formatPhone } from "@/components/members/status-badge"
 import { MemberAvatar } from "@/components/members/member-avatar"
 import { useMembers, useCashBook } from "@/lib/firebase-data"
 import { formatINR } from "@/data/members"
+import { useBackHandler } from "@/hooks/use-back-handler"
 
 export function ProfileTab({ onBack }: { onBack: () => void }) {
   const router = useRouter()
@@ -35,6 +36,12 @@ export function ProfileTab({ onBack }: { onBack: () => void }) {
   const [addMenuOpen, setAddMenuOpen] = useState(false)
   const { members: list, updateMember, deleteMember } = useMembers()
   const { txns } = useCashBook()
+
+  useBackHandler(logoutOpen, () => setLogoutOpen(false))
+  useBackHandler(!!deleteTarget, () => setDeleteTarget(null))
+  useBackHandler(!!editing, () => setEditing(null))
+  useBackHandler(addMenuOpen, () => setAddMenuOpen(false))
+  useBackHandler(!!menuId, () => setMenuId(null))
 
   const totalCollection = list.reduce((s, m) => s + (m.totalPaid || 0), 0)
   const totalExpense = txns
@@ -133,7 +140,7 @@ export function ProfileTab({ onBack }: { onBack: () => void }) {
             <div key={m.id} className="bg-white relative border-b border-emerald-200 border-b-2">
               <button
                 className="w-full flex items-center gap-3 p-3 pr-2 text-left hover:bg-slate-50 active:bg-slate-100/80 transition-colors"
-                onClick={() => router.push(`/profile/member/${m.id}`)}
+                onClick={() => router.push(`/profile/member/${m.id}?mode=edit`)}
               >
                 <MemberAvatar name={m.name} image={m.image} />
                 <div className="flex-1 min-w-0">
@@ -161,7 +168,7 @@ export function ProfileTab({ onBack }: { onBack: () => void }) {
                       label="View"
                       onClick={() => {
                         setMenuId(null)
-                        router.push(`/profile/member/${m.id}`)
+                        router.push(`/profile/member?id=${m.id}`)
                       }}
                     />
                     <MenuItem
@@ -347,7 +354,7 @@ function EditMemberModal({
   const addPayment = () => {
     setPayments((prev) => [
       ...prev,
-      { id: crypto.randomUUID?.() || `${Date.now()}`, amount: 0, date: "", description: "", method: "Cash" },
+      { id: crypto.randomUUID?.() || `${Date.now()}`, amount: 0, date: new Date().toISOString().slice(0, 10), description: "", method: "Cash" },
     ])
   }
 

@@ -1,9 +1,9 @@
+import { MembersList } from "@/components/members/members-list"
+import { AddMemberModal } from "@/components/members/add-member-modal"
+
 export const metadata = {
   title: "Members",
 }
-
-import { MembersList } from "@/components/members/members-list"
-import { AddMemberModal } from "@/components/members/add-member-modal"
 
 export default function MembersPage() {
   return (

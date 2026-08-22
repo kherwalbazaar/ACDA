@@ -19,7 +19,8 @@ export default function CashBookPage() {
   const { members } = useMembers()
   const router = useRouter()
 
-  const collection = members.reduce((s, m) => s + (m.totalPaid || 0), 0)
+  const directIncome = txns.filter((t) => t.type === "Income").reduce((s, t) => s + t.amount, 0)
+  const collection = members.reduce((s, m) => s + (m.totalPaid || 0), 0) + directIncome
   const expense = txns.filter((t) => t.type === "Expense").reduce((s, t) => s + t.amount, 0)
 
   type Entry = { id: string; date: string; description: string; type: "Income" | "Expense"; amount: number; via?: string; running?: number }

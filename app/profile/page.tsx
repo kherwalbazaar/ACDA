@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { ProfileTab } from "@/components/members/profile"
 import { ShieldCheck, Lock } from "lucide-react"
 import { setNavbarForcedHidden } from "@/hooks/navbar-store"
+import { useBackHandler } from "@/hooks/use-back-handler"
 
 const ADMIN_PASSWORD = "54557735"
 const ADMIN_AUTH_KEY = "admin_authenticated"
@@ -14,6 +15,8 @@ export default function ProfilePage() {
   const [step, setStep] = useState<"gate" | "password" | "admin">("gate")
   const [pw, setPw] = useState("")
   const [error, setError] = useState("")
+
+  useBackHandler(step === "password", () => setStep("gate"))
 
   useEffect(() => {
     if (typeof window !== "undefined" && localStorage.getItem(ADMIN_AUTH_KEY) === "1") setStep("admin")

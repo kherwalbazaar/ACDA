@@ -24,6 +24,8 @@ import {
   Building2,
 } from "lucide-react"
 
+import { useBackHandler } from "@/hooks/use-back-handler"
+
 interface AndroidDrawerProps {
   isOpen: boolean
   onClose: () => void
@@ -31,6 +33,8 @@ interface AndroidDrawerProps {
 
 export function AndroidDrawer({ isOpen, onClose }: AndroidDrawerProps) {
   const pathname = usePathname()
+
+  useBackHandler(isOpen, onClose)
 
   if (!isOpen) return null
 
@@ -41,7 +45,7 @@ export function AndroidDrawer({ isOpen, onClose }: AndroidDrawerProps) {
     { label: "Events & Programs", href: "/events", icon: Calendar, color: "text-purple-500 bg-purple-50" },
     { label: "Event Tickets", href: "/event-ticket", icon: Ticket, color: "text-rose-500 bg-rose-50" },
     { label: "Donations & Support", href: "/donations", icon: HeartHandshake, color: "text-pink-500 bg-pink-50" },
-    { label: "Expenses", href: "/expens", icon: DollarSign, color: "text-indigo-500 bg-indigo-50" },
+    { label: "Expenses", href: "/profile/add-expense", icon: DollarSign, color: "text-indigo-500 bg-indigo-50" },
     { label: "Reports & Docs", href: "/reports", icon: FileText, color: "text-cyan-500 bg-cyan-50" },
     { label: "Contact Us", href: "/contact", icon: PhoneCall, color: "text-teal-500 bg-teal-50" },
   ]

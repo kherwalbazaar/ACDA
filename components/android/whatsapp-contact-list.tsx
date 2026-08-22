@@ -95,16 +95,16 @@ export function WhatsAppContactList() {
         {/* WhatsApp Filter Tabs + Total Collection (horizontal) */}
         <div className="flex items-center justify-between gap-3 pt-1">
           <div className="flex items-center gap-1.5 flex-1 min-w-0">
-            {[
+            {([
               { id: "all", label: `All (${enrichedMembers.length})` },
               { id: "paid", label: "Paid" },
               { id: "pending", label: "Pending" },
-            ].map((tab) => {
+            ] as const).map((tab) => {
               const active = activeFilter === tab.id
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveFilter(tab.id as any)}
+                  onClick={() => setActiveFilter(tab.id)}
                   className={`flex-1 min-w-0 px-2 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap truncate text-center transition-all active:scale-95 sm:px-3 ${
                     active
                       ? "bg-white text-emerald-800 shadow-xs"
@@ -140,7 +140,7 @@ Collection
           filteredMembers.map((m) => (
             <Link
               key={m.id}
-              href={`/profile/member/${m.id}?src=home`}
+              href={`/profile/member?id=${m.id}&src=home`}
               className="flex items-center justify-between p-3.5 hover:bg-slate-50 active:bg-slate-100/80 cursor-pointer transition-colors group border-b-2 border-emerald-200"
             >
               {/* Left: Avatar with Online Dot */}

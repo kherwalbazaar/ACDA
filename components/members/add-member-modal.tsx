@@ -1,6 +1,9 @@
 "use client"
 
 import { useState } from "react"
+import { useMembers } from "@/lib/firebase-data"
+import { toast } from "sonner"
+import type { Member } from "@/data/members"
 
 export function AddMemberModal({
   open: controlledOpen,
@@ -15,24 +18,49 @@ export function AddMemberModal({
     setInternal(v)
     onOpenChange?.(v)
   }
+  const { addMember } = useMembers()
   const [name, setName] = useState("")
   const [mobile, setMobile] = useState("")
   const [designation, setDesignation] = useState("Member")
   const [imageUrl, setImageUrl] = useState("")
+  const [saving, setSaving] = useState(false)
 
   const reset = () => {
     setName("")
     setMobile("")
     setDesignation("Member")
+    setImageUrl("")
   }
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: wire to API or mutation. For now, just show a confirmation.
-    console.log({ name, mobile, designation, imageUrl })
-    alert(`Member submitted\nName: ${name}\nMobile: ${mobile}\nDesignation: ${designation}\nImage: ${imageUrl ? "provided" : "none"}`)
-    setOpen(false)
-    reset()
+    if (!name.trim()) {
+      toast.error("Please enter a name")
+      return
+    }
+
+    const member: Member = {
+      id: `mandwa-${Date.now()}`,
+      name: name.trim(),
+      designation: designation.trim() || "Member",
+      phone: mobile.trim(),
+      image: imageUrl.trim(),
+      membershipFee: 2000,
+      paymentHistory: [],
+      categories: ["pending"],
+    }
+
+    setSaving(true)
+    try {
+      await addMember(member)
+      toast.success(`${member.name} added successfully`)
+      setOpen(false)
+      reset()
+    } catch (err) {
+      toast.error("Failed to add member")
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (

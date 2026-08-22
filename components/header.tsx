@@ -146,8 +146,8 @@ export function Header() {
               <Link href="/donations" className={navLinkClass("/donations")}>
                 Donations / Support
               </Link>
-              <Link href="/expens" className={navLinkClass("/expens")}>
-                Expens
+              <Link href="/profile/add-expense" className={navLinkClass("/profile/add-expense")}>
+                Expenses
               </Link>
               <Link href="/reports" className={navLinkClass("/reports")}>
                 Reports

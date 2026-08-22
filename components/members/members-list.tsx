@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react"
 import Link from "next/link"
-import { members as source, type Member } from "@/data/members"
+import { type Member } from "@/data/members"
+import { useMembers } from "@/lib/firebase-data"
 
 function formatINR(n: number) {
   return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(n)
@@ -11,17 +12,18 @@ function formatINR(n: number) {
 export function MembersList() {
   const [q, setQ] = useState("")
   const [status, setStatus] = useState<"all" | "paid" | "unpaid">("all")
+  const { members: source, loading } = useMembers()
 
   const rows = useMemo(() => {
     return source
       .map((m) => {
-        const total = m.paymentHistory.reduce((s, p) => s + (p.amount || 0), 0)
-        const paid = (m.paidDate && m.paidDate.length > 0) || total > 0
+        const total = (m.paymentHistory || []).reduce((s, p) => s + (p.amount || 0), 0)
+        const paid = m.status === "paid" || total > 0
         return { ...m, total, paid }
       })
       .filter((m) => (q ? m.name.toLowerCase().includes(q.toLowerCase()) : true))
       .filter((m) => (status === "all" ? true : status === "paid" ? m.paid : !m.paid))
-  }, [q, status])
+  }, [source, q, status])
 
   return (
     <div className="space-y-4">
@@ -34,7 +36,7 @@ export function MembersList() {
         />
         <select
           value={status}
-          onChange={(e) => setStatus(e.target.value as any)}
+          onChange={(e) => setStatus(e.target.value as "all" | "paid" | "unpaid")}
           className="w-full sm:w-40 px-3 py-2 rounded-md border focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
         >
           <option value="all">All</option>
@@ -47,7 +49,7 @@ export function MembersList() {
         {rows.map((m) => (
           <Link
             key={m.id}
-            href={`/profile/member/${m.id}`}
+            href={`/profile/member?id=${m.id}`}
             className="p-4 rounded-xl border shadow-sm bg-white cursor-pointer hover:shadow-md transition block group"
           >
             <div className="flex items-center gap-3">
@@ -56,7 +58,7 @@ export function MembersList() {
                 alt={m.name}
                 className="w-12 h-12 rounded-full object-cover border"
                 onError={(e) => {
-                  ;(e.target as any).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&background=0D9488&color=fff`
+                  ;(e.currentTarget as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&background=0D9488&color=fff`
                 }}
               />
               <div className="flex-1 min-w-0">

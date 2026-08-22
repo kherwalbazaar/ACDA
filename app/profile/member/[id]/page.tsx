@@ -1,9 +1,13 @@
-"use client"
-
+import { members } from "@/data/members"
 import { MemberDetails } from "@/components/members/member-details"
-import { useParams } from "next/navigation"
 
-export default function MemberDetailsPage() {
-  const params = useParams<{ id: string }>()
-  return <MemberDetails memberId={params.id} />
+export function generateStaticParams() {
+  const ids = new Set([...members.map((member) => member.id), "mandwa-1787372117946"])
+  return [...ids].map((id) => ({ id }))
+}
+
+export default async function MemberPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+
+  return <MemberDetails memberId={id} />
 }
