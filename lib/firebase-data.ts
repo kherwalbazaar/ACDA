@@ -39,13 +39,34 @@ export type OrgSettings = {
   donations: { upiId: string; accountName: string; accountNo: string; ifsc: string }
 }
 
+const LOCAL_CACHE_PREFIX = "alm:data:"
+
+function readLocalCache<T>(key: string): T | null {
+  if (typeof window === "undefined") return null
+  try {
+    const value = window.localStorage.getItem(`${LOCAL_CACHE_PREFIX}${key}`)
+    return value ? (JSON.parse(value) as T) : null
+  } catch {
+    return null
+  }
+}
+
+function writeLocalCache<T>(key: string, value: T) {
+  if (typeof window === "undefined") return
+  try {
+    window.localStorage.setItem(`${LOCAL_CACHE_PREFIX}${key}`, JSON.stringify(value))
+  } catch {
+    // Storage can be unavailable or full; Firebase remains the source of truth.
+  }
+}
+
 function toArray<T>(val: Record<string, T> | T[] | null | undefined): T[] {
   if (!val) return []
   if (Array.isArray(val)) return val
   return Object.entries(val).map(([id, v]) => ({ ...(v as object), id })) as T[]
 }
 
-function enrichMembers(records: Record<string, Member> | null): EnrichedMember[] {
+function enrichMembers(records: Record<string, Member> | Member[] | null): EnrichedMember[] {
   if (!records) return []
   const list = toArray(records)
   return list
@@ -85,10 +106,18 @@ export function useMembers() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    const cached = readLocalCache<Record<string, Member> | Member[]>("members")
+    if (cached) {
+      setMembers(enrichMembers(cached))
+      setLoading(false)
+    }
+
     const un = onValue(
       ref(database, "members"),
       (snap) => {
-        setMembers(enrichMembers(snap.val()))
+        const value = snap.val()
+        setMembers(enrichMembers(value))
+        writeLocalCache("members", value)
         setLoading(false)
       },
       () => setLoading(false)
@@ -123,8 +152,15 @@ export function useCommunityChat() {
   const [messages, setMessages] = useState<CommunityMessage[]>([])
 
   useEffect(() => {
+    const cached = readLocalCache<CommunityMessage[]>("chat")
+    if (cached) setMessages(cached)
+
     const r = ref(database, "chat/community")
-    const un = onValue(r, (snap) => setMessages(toArray<CommunityMessage>(snap.val())))
+    const un = onValue(r, (snap) => {
+      const value = toArray<CommunityMessage>(snap.val())
+      setMessages(value)
+      writeLocalCache("chat", value)
+    })
     return () => {
       un()
     }
@@ -143,9 +179,14 @@ export function useCashBook() {
   const [txns, setTxns] = useState<CashTxn[]>([])
 
   useEffect(() => {
+    const cached = readLocalCache<CashTxn[]>("cashBook")
+    if (cached) setTxns(cached)
+
     const r = ref(database, "cashBook")
     const un = onValue(r, (snap) => {
-      setTxns(toArray<CashTxn>(snap.val()))
+      const value = toArray<CashTxn>(snap.val())
+      setTxns(value)
+      writeLocalCache("cashBook", value)
     })
     return () => {
       un()
@@ -173,8 +214,15 @@ export function useEvents() {
   const [events, setEvents] = useState<EventItem[]>([])
 
   useEffect(() => {
+    const cached = readLocalCache<EventItem[]>("events")
+    if (cached) setEvents(cached)
+
     const r = ref(database, "events")
-    const un = onValue(r, (snap) => setEvents(toArray<EventItem>(snap.val())))
+    const un = onValue(r, (snap) => {
+      const value = toArray<EventItem>(snap.val())
+      setEvents(value)
+      writeLocalCache("events", value)
+    })
     return () => {
       un()
     }
@@ -193,8 +241,15 @@ export function useSettings() {
   const [settings, setSettings] = useState<OrgSettings | null>(null)
 
   useEffect(() => {
+    const cached = readLocalCache<OrgSettings>("settings")
+    if (cached) setSettings(cached)
+
     const r = ref(database, "settings")
-    const un = onValue(r, (snap) => setSettings(snap.val()))
+    const un = onValue(r, (snap) => {
+      const value = snap.val()
+      setSettings(value)
+      writeLocalCache("settings", value)
+    })
     return () => {
       un()
     }

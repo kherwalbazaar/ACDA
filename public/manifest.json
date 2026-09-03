@@ -1,6 +1,6 @@
 {
-  "name": "ADIM LAHAH MANDAWA",
-  "short_name": "ADIM LAHAH MANDAWA",
+  "name": "ALM",
+  "short_name": "ALM",
   "description": "ADIM LAHAH MANDAWA",
   "start_url": "/",
   "display": "standalone",
@@ -9,8 +9,8 @@
   "theme_color": "#128C7E",
   "icons": [
     {
-      "src": "/icon-192.png",
-      "sizes": "192x192",
+      "src": "/icon-512.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },

@@ -50,7 +50,7 @@ export function MembersList() {
           <Link
             key={m.id}
             href={`/profile/member?id=${m.id}`}
-            className="p-4 rounded-xl border shadow-sm bg-white cursor-pointer hover:shadow-md transition block group"
+            className="p-3 rounded-xl border shadow-sm bg-white cursor-pointer hover:shadow-md transition block group"
           >
             <div className="flex items-center gap-3">
               <img

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, BookOpen, User } from "lucide-react"
+import { Home, BookOpen } from "lucide-react"
 import { useHideOnScroll } from "@/hooks/use-hide-on-scroll"
 import { subscribeNavbarForcedHidden, isNavbarForcedHidden } from "@/hooks/navbar-store"
 
@@ -23,8 +23,13 @@ export function FloatingBottomNav() {
     return () => document.removeEventListener("focusin", onFocusIn)
   }, [])
 
+  const isHomeOrCashBook = pathname === "/" || pathname.startsWith("/cash-book")
   const isVisible =
-    scrollVisible && !inputFocused && !forcedHidden && !pathname.startsWith("/chat") && !pathname.startsWith("/profile/member") && !pathname.startsWith("/cash-book")
+    (isHomeOrCashBook || scrollVisible) &&
+    !inputFocused &&
+    !forcedHidden &&
+    !pathname.startsWith("/chat") &&
+    !pathname.startsWith("/profile/member")
 
   const navItems = [
     {
@@ -38,17 +43,13 @@ export function FloatingBottomNav() {
       href: "/cash-book",
       icon: BookOpen,
     },
-    {
-      label: "Profile",
-      href: "/profile",
-      icon: User,
-    },
   ]
 
   const isItemActive = (item: typeof navItems[0]) => {
     if (item.exact) return pathname === "/"
     return pathname === item.href || pathname.startsWith(item.href + "/")
   }
+  const activeIndex = navItems.findIndex(isItemActive)
 
   return (
     <div
@@ -56,7 +57,14 @@ export function FloatingBottomNav() {
         isVisible ? "translate-y-0 opacity-100 scale-100" : "translate-y-24 opacity-0 scale-95"
       }`}
     >
-      <nav className="max-w-sm mx-auto bg-whatsapp border border-whatsapp-dark/60 rounded-full p-1.5 shadow-[0_12px_32px_rgba(0,0,0,0.45)] flex items-center justify-between pointer-events-auto">
+      <nav className="relative max-w-sm mx-auto bg-whatsapp border border-whatsapp-dark/60 rounded-full p-1.5 shadow-[0_12px_32px_rgba(0,0,0,0.45)] flex items-center justify-between pointer-events-auto">
+        {activeIndex >= 0 && (
+          <div
+            className="absolute inset-y-1.5 left-1.5 w-[calc(50%-0.375rem)] rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 shadow-md transition-transform duration-700 ease-in-out"
+            style={{ transform: `translateX(${activeIndex * 100}%)` }}
+            aria-hidden="true"
+          />
+        )}
         {navItems.map((item) => {
           const active = isItemActive(item)
           const Icon = item.icon
@@ -71,11 +79,6 @@ export function FloatingBottomNav() {
                   : "text-emerald-100/80 hover:text-white"
               }`}
             >
-              {/* Pill-style active indicator background */}
-              {active && (
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 rounded-full shadow-md animate-in fade-in zoom-in-95 duration-200 -z-0" />
-              )}
-
               <Icon className={`w-4 h-4 z-10 transition-transform duration-200 ${active ? "scale-110" : ""}`} />
               <span className="z-10 tracking-tight">{item.label}</span>
             </Link>

@@ -216,9 +216,15 @@ Collection
               {expanded && (
                 <div className="border-t border-emerald-200 bg-emerald-50 px-5 py-4" onClick={(event) => event.stopPropagation()}>
                   <div className="grid grid-cols-2 gap-x-5 gap-y-4 text-sm">
-                    {m.phone && <div>
-                      <span className="block text-xs font-semibold uppercase tracking-wide text-emerald-700">Phone</span>
-                      <span className="text-sm font-medium text-slate-700">{m.phone}</span>
+                    {m.phone && <div className="col-span-2 flex items-end justify-between gap-3">
+                      <div>
+                        <span className="block text-xs font-semibold uppercase tracking-wide text-emerald-700">Phone</span>
+                        <span className="text-sm font-medium text-slate-700">{m.phone}</span>
+                      </div>
+                      <div className="shrink-0 rounded-lg border border-emerald-200 bg-white px-3 py-2 text-right shadow-sm">
+                        <span className="block text-xs font-semibold uppercase tracking-wide text-emerald-700">Total Paid</span>
+                        <span className="text-sm font-bold text-emerald-700">{formatINR(paymentTotal)}</span>
+                      </div>
                     </div>}
                     {m.email && <div>
                       <span className="block text-xs font-semibold uppercase tracking-wide text-emerald-700">Email</span>
@@ -229,7 +235,7 @@ Collection
                   {paymentHistory.length > 0 && <div className="mt-5 border-t border-emerald-200 pt-3">
                     <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wide text-emerald-700">
                       <span>Date</span>
-                      <span>Total Paid</span>
+                      <span>PAID</span>
                     </div>
                     <div className="mt-2 border-t border-emerald-200">
                       {paymentHistory.map((payment) => (
@@ -238,10 +244,6 @@ Collection
                           <span className="shrink-0 font-bold text-emerald-700">{formatINR(payment.amount)}</span>
                         </div>
                       ))}
-                      <div className="flex items-center justify-between gap-3 pt-3 text-sm font-bold text-slate-800">
-                        <span>Total Paid</span>
-                        <span className="text-emerald-700">{formatINR(paymentTotal)}</span>
-                      </div>
                     </div>
                   </div>}
                 </div>

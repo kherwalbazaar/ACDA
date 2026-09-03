@@ -9,11 +9,12 @@ import { AppShell } from "@/components/app-shell"
 import { Toaster } from "@/components/ui/sonner"
 import { ScreenshotProtection } from "@/components/ScreenshotProtection"
 import { PwaRegister } from "@/components/PwaRegister"
+import { PwaInstallPrompt } from "@/components/PwaInstallPrompt"
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://localhost:3000"),
   title: {
-    default: "ADIM LAHAH MANDAWA - ADIM LAHAH MANDAWA",
+  default: "ALM - ADIM LAHAH MANDAWA",
     template: "%s | ADIM LAHAH MANDAWA",
   },
   description:
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
     "development association",
     "community",
   ],
-  applicationName: "ADIM LAHAH MANDAWA",
+  applicationName: "ALM",
   generator: "v0.app",
   authors: [{ name: "ADIM LAHAH MANDAWA" }],
   creator: "ADIM LAHAH MANDAWA",
@@ -34,12 +35,12 @@ export const metadata: Metadata = {
   category: "community",
   manifest: "/manifest.json",
   icons: {
-    icon: "/icon-192.png",
-    apple: "/icon-192.png",
+    icon: "/icon-512.png",
+    apple: "/icon-512.png",
   },
   appleWebApp: {
     capable: true,
-    title: "ADIM LAHAH MANDAWA",
+    title: "ALM",
     statusBarStyle: "black-translucent",
   },
   formatDetection: {
@@ -95,12 +96,13 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="ADIM LAHAH MANDAWA" />
-        <link rel="apple-touch-icon" href="/icon-192.png" />
-        <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+        <link rel="apple-touch-icon" href="/icon-512.png" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
       </head>
       <body suppressHydrationWarning className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         <ScreenshotProtection />
         <PwaRegister />
+        <PwaInstallPrompt />
         <AppShell>
           <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
         </AppShell>

@@ -1,8 +1,7 @@
 "use client"
 
 import { useCashBook, useMembers } from "@/lib/firebase-data"
-import { useRouter } from "next/navigation"
-import { ArrowLeft, FileText, Wallet, Scale, TrendingDown } from "lucide-react"
+import { FileText, TrendingDown, TrendingUp, Wallet } from "lucide-react"
 import { formatINR } from "@/data/members"
 
 const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
@@ -17,7 +16,6 @@ function formatDate(d: string) {
 export default function CashBookPage() {
   const { txns } = useCashBook()
   const { members } = useMembers()
-  const router = useRouter()
 
   const directIncome = txns.filter((t) => t.type === "Income").reduce((s, t) => s + t.amount, 0)
   const collection = members.reduce((s, m) => s + (m.totalPaid || 0), 0) + directIncome
@@ -49,9 +47,9 @@ export default function CashBookPage() {
   const entries = withBalance.reverse()
 
   const stats = [
-    { label: "Collection", value: formatINR(collection), icon: Wallet, tint: "bg-sky-50 text-sky-600" },
-    { label: "Expense", value: formatINR(expense), icon: TrendingDown, tint: "bg-rose-50 text-rose-600" },
-    { label: "Balance", value: formatINR(collection - expense), icon: Scale, tint: "bg-indigo-50 text-indigo-600" },
+    { label: "Collection", value: formatINR(collection), icon: TrendingDown, tint: "bg-sky-50 text-sky-600" },
+    { label: "Expense", value: formatINR(expense), icon: TrendingUp, tint: "bg-rose-50 text-rose-600" },
+    { label: "Balance", value: formatINR(collection - expense), icon: Wallet, tint: "bg-indigo-50 text-indigo-600" },
   ]
 
   const groups = new Map<string, Entry[]>()
@@ -65,9 +63,7 @@ export default function CashBookPage() {
   return (
     <div className="min-h-screen bg-chat-bg pb-10">
       <header className="bg-whatsapp text-white px-3 py-3 flex items-center justify-between shadow-md sticky top-0 z-40">
-        <button onClick={() => router.back()} className="p-2 rounded-full hover:bg-whatsapp-dark transition" aria-label="Back">
-          <ArrowLeft className="h-5 w-5" />
-        </button>
+        <span className="w-9" />
         <div className="flex items-center gap-2">
           <FileText className="w-5 h-5" />
           <h2 className="text-base font-semibold">Cash Book</h2>
@@ -106,7 +102,7 @@ export default function CashBookPage() {
               </div>
               <div className="bg-white rounded-b-2xl shadow-sm border border-slate-100 overflow-hidden divide-y divide-slate-100">
                 {items.map((t) => (
-                  <div key={t.id} className="flex items-center gap-3 px-3 py-2.5">
+                  <div key={t.id} className="flex items-center gap-3 px-3 py-2">
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-slate-900 truncate">{t.description}</p>
                       {t.via && <span className="inline-block mt-0.5 text-[10px] font-semibold text-emerald-700 bg-emerald-50 rounded-full px-1.5 py-0.5">Via: {t.via}</span>}
