@@ -7,22 +7,10 @@
 "use client"
 
 import React, { useState, useMemo } from "react"
-import { formatDate, formatINR, type EnrichedMember } from "@/data/members"
+import { formatDate, formatINR } from "@/data/members"
 import { Search, CheckCircle2, AlertCircle, UserCheck, ChevronDown, X } from "lucide-react"
 import { MemberAvatar } from "@/components/members/member-avatar"
 import { useMembers } from "@/lib/firebase-data"
-
-/**
- * Helper function to format the last payment date of a member.
- *
- * @param m - The enriched member object.
- * @returns A formatted date string in 'en-IN' locale (e.g., "15 August 2023") or "—" if no date is found.
- */
-const lastPaidLabel = (m: EnrichedMember) => {
-  const raw = m.lastPayment?.date || m.paidDate
-  if (!raw) return "—"
-  return new Date(raw).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })
-}
 
 /**
  * WhatsAppContactList Component
@@ -148,7 +136,7 @@ Collection
               onClick={() => setExpandedMemberId(expanded ? null : m.id)}
               className={`${expanded ? "bg-emerald-100 border-emerald-300" : "bg-white border-emerald-200"} hover:bg-emerald-200 active:bg-emerald-300 cursor-pointer transition-colors group border-b-2`}
             >
-              <div className="flex items-center justify-between p-3.5">
+              <div className="flex items-center justify-between p-2">
               {/* Left: Avatar with Online Dot */}
               <div className="flex items-center gap-3 min-w-0 flex-1">
                 <div className="relative flex-shrink-0">
@@ -167,8 +155,8 @@ Collection
 
                 {/* Contact Info */}
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-1.5">
-                    <span className={`font-bold text-sm truncate leading-snug transition-colors ${expanded ? "text-emerald-950" : "text-slate-900 group-hover:text-emerald-700"}`}>
+                  <div className="flex items-center gap-2">
+                    <span className={`min-w-0 truncate font-bold text-sm leading-snug transition-colors ${expanded ? "text-emerald-950" : "text-slate-900 group-hover:text-emerald-700"}`}>
                       {m.name}
                     </span>
                     {m.designation === "President" && (
@@ -182,27 +170,27 @@ Collection
                       </span>
                     )}
                   </div>
-                  <p className={`text-xs truncate mt-0.5 font-medium flex items-center gap-1 ${expanded ? "text-emerald-800" : "text-slate-500"}`}>
-                    <span>{m.designation}</span>
-                    <span className={expanded ? "text-emerald-400" : "text-slate-300"}>•</span>
-                    <span className={`text-[11px] ${expanded ? "text-emerald-700" : "text-slate-400"}`}>
-                      {m.status === "paid" ? `Last Paid: ${lastPaidLabel(m)}` : "Pending"}
-                    </span>
+                  <p className={`text-xs truncate mt-0.5 font-medium ${expanded ? "text-emerald-800" : "text-slate-500"}`}>
+                    {m.designation}
                   </p>
                 </div>
               </div>
 
-              {/* Right: Payment Badge & Chevron Arrow */}
+              {/* Right: Payment Status & Chevron Arrow */}
               <div className="flex items-center gap-2 flex-shrink-0 ml-2">
-                <div className="text-right hidden sm:block">
-                  <div className={`text-xs font-bold ${m.status === "paid" ? "text-emerald-700" : "text-amber-700"}`}>
-                    {m.totalPaid > 0 ? formatINR(m.totalPaid) : "₹0"}
-                  </div>
-                  <span className="text-[10px] text-slate-400 font-medium">
-                    {m.status === "paid" ? "Contrib. Paid" : "Unpaid"}
-                  </span>
-                </div>
-
+                <span
+                  className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-bold ${
+                    m.totalPaid <= 0
+                      ? "bg-red-100 text-red-700"
+                      : m.totalPaid < 2000
+                        ? "bg-yellow-100 text-yellow-700"
+                        : m.totalPaid === 2000
+                          ? "bg-green-100 text-green-700"
+                          : "bg-blue-100 text-blue-700"
+                  }`}
+                >
+                  {formatINR(m.totalPaid)}
+                </span>
                 {m.status === "paid" ? (
                   <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />
                 ) : (
