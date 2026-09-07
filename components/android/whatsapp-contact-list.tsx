@@ -8,9 +8,9 @@
 
 import React, { useState, useMemo } from "react"
 import { formatDate, formatINR } from "@/data/members"
-import { Search, CheckCircle2, AlertCircle, UserCheck, ChevronDown, X } from "lucide-react"
+import { Search, CheckCircle2, AlertCircle, UserCheck, ChevronDown, X, TrendingDown, TrendingUp, Wallet } from "lucide-react"
 import { MemberAvatar } from "@/components/members/member-avatar"
-import { useMembers } from "@/lib/firebase-data"
+import { useMembers, useCashBook } from "@/lib/firebase-data"
 
 /**
  * WhatsAppContactList Component
@@ -31,9 +31,19 @@ export function WhatsAppContactList() {
   const [searchQuery, setSearchQuery] = useState("")
   const [activeFilter, setActiveFilter] = useState<"all" | "paid" | "pending">("all")
   const [expandedMemberId, setExpandedMemberId] = useState<string | null>(null)
+  const [showSearch, setShowSearch] = useState(false)
   const { members: enrichedMembers } = useMembers()
+  const { txns } = useCashBook()
 
-  // Filtered members list
+  const directIncome = txns.filter((t) => t.type === "Income").reduce((s, t) => s + t.amount, 0)
+  const totalCollection = enrichedMembers.reduce((s, m) => s + m.totalPaid, 0) + directIncome
+  const expense = txns.filter((t) => t.type === "Expense").reduce((s, t) => s + t.amount, 0)
+
+  const stats = [
+    { label: "Collection", value: formatINR(totalCollection), icon: TrendingDown, tint: "bg-emerald-500 text-white" },
+    { label: "Expense", value: formatINR(expense), icon: TrendingUp, tint: "bg-rose-500 text-white" },
+    { label: "Balance", value: formatINR(totalCollection - expense), icon: Wallet, tint: "bg-pink-500 text-white" },
+  ]
   const filteredMembers = useMemo(() => {
     return enrichedMembers.filter((m) => {
       const matchesSearch =
@@ -48,8 +58,6 @@ export function WhatsAppContactList() {
     })
   }, [enrichedMembers, searchQuery, activeFilter])
 
-  const totalCollection = enrichedMembers.reduce((s, m) => s + m.totalPaid, 0)
-
   return (
     <div className="w-full min-h-screen bg-slate-100 text-slate-900">
       {/* WhatsApp Header Banner */}
@@ -59,63 +67,75 @@ export function WhatsAppContactList() {
             ADIM LAHAH MANDAWA
           </h2>
         </div>
+      </div>
 
-        {/* Search Bar Input */}
-        <div className="relative flex items-center mb-3">
-          <Search className="w-4 h-4 absolute left-3 text-slate-400" />
-          <input
-            type="text"
-            placeholder="Search contact by name or role..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-8 py-2 bg-white text-slate-900 placeholder-slate-400 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 shadow-xs"
-          />
-          {searchQuery && (
+      {/* Stats Cards */}
+      <section className="px-1.5 py-2 flex items-stretch gap-1.5 overflow-x-auto bg-slate-100">
+        {stats.map((s) => (
+          <div key={s.label} className={`flex-1 min-w-[0] ${s.tint} rounded-xl shadow-sm px-2 py-2.5 flex flex-col items-center gap-1 text-center`}>
+            <div className="inline-flex items-center justify-center h-6 w-6 rounded-md bg-white/20">
+              <s.icon className="h-3.5 w-3.5" />
+            </div>
+            <span className="text-[13px] font-bold text-white leading-none">{s.value}</span>
+            <span className="text-[8.5px] font-semibold text-white/80 uppercase tracking-wide leading-tight">{s.label}</span>
+          </div>
+        ))}
+      </section>
+
+      {/* Filter Tabs */}
+      <div className="px-1.5 py-1.5 flex items-center gap-1.5 bg-slate-100">
+        {([
+          { id: "all", label: `All (${enrichedMembers.length})` },
+          { id: "paid", label: "Paid" },
+          { id: "pending", label: "Pending" },
+        ] as const).map((tab) => {
+          const active = activeFilter === tab.id
+          return (
             <button
-              onClick={() => setSearchQuery("")}
+              key={tab.id}
+              onClick={() => setActiveFilter(tab.id)}
+              className={`flex-1 min-w-0 px-2 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap truncate text-center transition-all active:scale-95 ${
+                active
+                  ? "bg-white text-emerald-800 shadow-xs"
+                  : "bg-slate-200 text-slate-600 hover:bg-slate-300"
+              }`}
+            >
+              {tab.label}
+            </button>
+          )
+        })}
+        <button
+          onClick={() => setShowSearch(!showSearch)}
+          className={`shrink-0 h-8 w-8 flex items-center justify-center rounded-full transition-all active:scale-95 ${
+            showSearch ? "bg-emerald-500 text-white" : "bg-slate-200 text-slate-600 hover:bg-slate-300"
+          }`}
+        >
+          <Search className="w-4 h-4" />
+        </button>
+      </div>
+
+      {/* Search Bar */}
+      {showSearch && (
+        <div className="px-1.5 py-1.5 bg-slate-100">
+          <div className="relative flex items-center">
+            <Search className="w-4 h-4 absolute left-3 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Search contact by name or role..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              autoFocus
+              className="w-full pl-9 pr-8 py-2 bg-white text-slate-900 placeholder-slate-400 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 shadow-xs"
+            />
+            <button
+              onClick={() => { setSearchQuery(""); setShowSearch(false) }}
               className="absolute right-2.5 text-slate-400 hover:text-slate-600 p-0.5"
             >
               <X className="w-4 h-4" />
             </button>
-          )}
-        </div>
-
-        {/* WhatsApp Filter Tabs + Total Collection (horizontal) */}
-        <div className="flex items-center justify-between gap-3 pt-1">
-          <div className="flex items-center gap-1.5 flex-1 min-w-0">
-            {([
-              { id: "all", label: `All (${enrichedMembers.length})` },
-              { id: "paid", label: "Paid" },
-              { id: "pending", label: "Pending" },
-            ] as const).map((tab) => {
-              const active = activeFilter === tab.id
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveFilter(tab.id)}
-                  className={`flex-1 min-w-0 px-2 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap truncate text-center transition-all active:scale-95 sm:px-3 ${
-                    active
-                      ? "bg-white text-emerald-800 shadow-xs"
-                      : "bg-emerald-700/60 text-emerald-100 hover:bg-emerald-700"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              )
-            })}
-          </div>
-
-          {/* Total Collection */}
-          <div className="shrink-0 pt-0.5">
-            <div className="bg-white rounded-xl border-2 border-emerald-300 px-3 py-1.5 shadow-sm text-center min-w-0">
-              <p className="text-[10px] text-emerald-700 font-bold leading-tight uppercase tracking-wide">
-Collection
-              </p>
-              <p className="text-lg font-black text-emerald-800 leading-tight truncate">{formatINR(totalCollection)}</p>
-            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Contact List */}
       <div className="space-y-0.5 bg-white shadow-xs">
@@ -180,13 +200,9 @@ Collection
               <div className="flex items-center gap-2 flex-shrink-0 ml-2">
                 <span
                   className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-bold ${
-                    m.totalPaid <= 0
-                      ? "bg-red-100 text-red-700"
-                      : m.totalPaid < 2000
-                        ? "bg-yellow-100 text-yellow-700"
-                        : m.totalPaid === 2000
-                          ? "bg-green-100 text-green-700"
-                          : "bg-blue-100 text-blue-700"
+                    m.totalPaid > 0
+                      ? "bg-emerald-100 text-emerald-700"
+                      : "bg-red-100 text-red-700"
                   }`}
                 >
                   {formatINR(m.totalPaid)}

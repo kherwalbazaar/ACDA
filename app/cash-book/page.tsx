@@ -47,9 +47,9 @@ export default function CashBookPage() {
   const entries = withBalance.reverse()
 
   const stats = [
-    { label: "Collection", value: formatINR(collection), icon: TrendingDown, tint: "bg-sky-50 text-sky-600" },
-    { label: "Expense", value: formatINR(expense), icon: TrendingUp, tint: "bg-rose-50 text-rose-600" },
-    { label: "Balance", value: formatINR(collection - expense), icon: Wallet, tint: "bg-indigo-50 text-indigo-600" },
+    { label: "Collection", value: formatINR(collection), icon: TrendingDown, tint: "bg-emerald-500 text-white" },
+    { label: "Expense", value: formatINR(expense), icon: TrendingUp, tint: "bg-rose-500 text-white" },
+    { label: "Balance", value: formatINR(collection - expense), icon: Wallet, tint: "bg-pink-500 text-white" },
   ]
 
   const groups = new Map<string, Entry[]>()
@@ -73,34 +73,34 @@ export default function CashBookPage() {
 
       <section className="px-2 py-2 flex items-stretch gap-1.5 overflow-x-auto bg-chat-bg">
         {stats.map((s) => (
-          <div key={s.label} className="flex-1 min-w-[0] bg-white rounded-xl shadow-sm border border-slate-100 px-2 py-2.5 flex flex-col items-center gap-1 text-center">
-            <div className={`inline-flex items-center justify-center h-6 w-6 rounded-md ${s.tint}`}>
+          <div key={s.label} className={`flex-1 min-w-[0] ${s.tint} rounded-xl shadow-sm px-2 py-2.5 flex flex-col items-center gap-1 text-center`}>
+            <div className="inline-flex items-center justify-center h-6 w-6 rounded-md bg-white/20">
               <s.icon className="h-3.5 w-3.5" />
             </div>
-            <span className="text-[13px] font-bold text-slate-900 leading-none">{s.value}</span>
-            <span className="text-[8.5px] font-semibold text-slate-500 uppercase tracking-wide leading-tight">{s.label}</span>
+            <span className="text-[13px] font-bold text-white leading-none">{s.value}</span>
+            <span className="text-[8.5px] font-semibold text-white/80 uppercase tracking-wide leading-tight">{s.label}</span>
           </div>
         ))}
       </section>
 
-      <main className="px-3 py-2 space-y-2">
+      <main className="px-1.5 py-2 space-y-2">
         {entries.length === 0 && (
           <div className="py-16 text-center text-slate-400 text-sm">No transactions yet.</div>
         )}
         {(() =>
           [...groups.entries()].map(([date, items]) => (
             <div key={date}>
-              <div className="relative bg-emerald-600 text-white rounded-t-2xl shadow-sm px-3 py-2 flex items-center justify-between gap-3">
-                <div className="py-1 px-3 bg-emerald-700 rounded-lg flex items-center">
-                  <span className="text-xs font-semibold tracking-wide uppercase leading-none">{formatDate(date)}</span>
+              <div className="relative bg-pink-300 text-white rounded-t-xl shadow-sm px-3 py-2 flex items-center justify-between gap-3">
+                <div className="py-1 px-3 bg-white rounded-lg flex items-center">
+                  <span className="text-xs font-semibold tracking-wide uppercase leading-none text-pink-500">{formatDate(date)}</span>
                 </div>
                 {items[0]?.running != null && (
-                  <div className="py-1 px-3 bg-emerald-700 rounded-lg flex items-center">
-                    <span className="text-base font-extrabold leading-none">{formatINR(items[0].running)}</span>
+                  <div className="py-1 px-3 bg-white rounded-lg flex items-center">
+                    <span className={`text-base font-extrabold leading-none ${items[0].running >= 0 ? "text-emerald-600" : "text-red-500"}`}>{formatINR(items[0].running)}</span>
                   </div>
                 )}
               </div>
-              <div className="bg-white rounded-b-2xl shadow-sm border border-slate-100 overflow-hidden divide-y divide-slate-100">
+              <div className="bg-slate-50 rounded-b-xl shadow-sm border border-slate-100 overflow-hidden divide-y divide-slate-100">
                 {items.map((t) => (
                   <div key={t.id} className="flex items-center gap-3 px-3 py-2">
                     <div className="flex-1 min-w-0">

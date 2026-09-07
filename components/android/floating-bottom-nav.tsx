@@ -23,9 +23,8 @@ export function FloatingBottomNav() {
     return () => document.removeEventListener("focusin", onFocusIn)
   }, [])
 
-  const isHomeOrCashBook = pathname === "/" || pathname.startsWith("/cash-book")
   const isVisible =
-    (isHomeOrCashBook || scrollVisible) &&
+    scrollVisible &&
     !inputFocused &&
     !forcedHidden &&
     !pathname.startsWith("/chat") &&
@@ -53,11 +52,13 @@ export function FloatingBottomNav() {
 
   return (
     <div
-      className={`fixed bottom-4 left-0 right-0 z-50 px-4 pointer-events-none transition-all duration-300 ease-out ${
-        isVisible ? "translate-y-0 opacity-100 scale-100" : "translate-y-24 opacity-0 scale-95"
+      className={`fixed bottom-4 left-0 right-0 z-50 px-4 pointer-events-none ${
+        isVisible
+          ? "animate-[navbar-show_0.4s_cubic-bezier(0.34,1.56,0.64,1)_forwards]"
+          : "animate-[navbar-hide_0.3s_cubic-bezier(0.36,0,0.66,-0.56)_forwards]"
       }`}
     >
-      <nav className="relative max-w-sm mx-auto bg-whatsapp border border-whatsapp-dark/60 rounded-full p-1.5 shadow-[0_12px_32px_rgba(0,0,0,0.45)] flex items-center justify-between pointer-events-auto">
+      <nav className="relative max-w-sm mx-auto bg-whatsapp border border-whatsapp-dark/60 rounded-full p-1.5 shadow-[0_12px_32px_rgba(0,0,0,0.45)] flex items-center justify-between pointer-events-auto backdrop-blur-sm">
         {activeIndex >= 0 && (
           <div
             className="absolute inset-y-1.5 left-1.5 w-[calc(50%-0.375rem)] rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 shadow-md transition-transform duration-700 ease-in-out"
