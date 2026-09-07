@@ -62,13 +62,13 @@ export default function CashBookPage() {
 
   return (
     <div className="min-h-screen bg-chat-bg pb-10">
-      <header className="bg-whatsapp text-white px-3 py-3 flex items-center justify-between shadow-md sticky top-0 z-40">
-        <span className="w-9" />
-        <div className="flex items-center gap-2">
-          <FileText className="w-5 h-5" />
-          <h2 className="text-base font-semibold">Cash Book</h2>
+      <header className="bg-whatsapp text-white px-4 pt-4 pb-3 shadow-md sticky top-0 z-40">
+        <div className="flex items-center justify-center">
+          <div className="flex items-center gap-2">
+            <FileText className="w-5 h-5" />
+            <h2 className="text-lg font-extrabold leading-tight tracking-wide uppercase">Cash Book</h2>
+          </div>
         </div>
-        <span className="w-9" />
       </header>
 
       <section className="px-2 py-2 flex items-stretch gap-1.5 overflow-x-auto bg-chat-bg">

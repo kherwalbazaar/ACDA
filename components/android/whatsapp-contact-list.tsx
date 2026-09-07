@@ -61,8 +61,8 @@ export function WhatsAppContactList() {
   return (
     <div className="w-full min-h-screen bg-slate-100 text-slate-900">
       {/* WhatsApp Header Banner */}
-      <div className="bg-emerald-800 text-white px-4 pt-4 pb-3 shadow-md">
-        <div className="flex items-center justify-center mb-3">
+      <div className="bg-whatsapp text-white px-4 pt-4 pb-3 shadow-md">
+        <div className="flex items-center justify-center">
           <h2 className="text-lg font-extrabold leading-tight tracking-wide uppercase text-center">
             ADIM LAHAH MANDAWA
           </h2>
@@ -70,7 +70,7 @@ export function WhatsAppContactList() {
       </div>
 
       {/* Stats Cards */}
-      <section className="px-1.5 py-2 flex items-stretch gap-1.5 overflow-x-auto bg-slate-100">
+      <section className="px-2 py-2 flex items-stretch gap-1.5 overflow-x-auto bg-slate-100">
         {stats.map((s) => (
           <div key={s.label} className={`flex-1 min-w-[0] ${s.tint} rounded-xl shadow-sm px-2 py-2.5 flex flex-col items-center gap-1 text-center`}>
             <div className="inline-flex items-center justify-center h-6 w-6 rounded-md bg-white/20">
