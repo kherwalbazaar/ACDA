@@ -8,9 +8,19 @@
 
 import React, { useState, useMemo } from "react"
 import { formatDate, formatINR } from "@/data/members"
-import { Search, CheckCircle2, AlertCircle, UserCheck, ChevronDown, X, TrendingDown, TrendingUp, Wallet } from "lucide-react"
+import { Search, CheckCircle2, AlertCircle, UserCheck, ChevronDown, X, TrendingDown, TrendingUp, Wallet, Phone } from "lucide-react"
 import { MemberAvatar } from "@/components/members/member-avatar"
+import { formatPhone } from "@/components/members/status-badge"
 import { useMembers, useCashBook } from "@/lib/firebase-data"
+
+const MEMBERSHIP_FEE = 2000
+
+function amountTint(totalPaid: number) {
+  if (!totalPaid) return "bg-red-100 text-red-700"
+  if (totalPaid < MEMBERSHIP_FEE) return "bg-yellow-100 text-yellow-800"
+  if (totalPaid === MEMBERSHIP_FEE) return "bg-emerald-100 text-emerald-700"
+  return "bg-blue-100 text-blue-700"
+}
 
 /**
  * WhatsAppContactList Component
@@ -45,17 +55,20 @@ export function WhatsAppContactList() {
     { label: "Balance", value: formatINR(totalCollection - expense), icon: Wallet, tint: "bg-pink-500 text-white" },
   ]
   const filteredMembers = useMemo(() => {
-    return enrichedMembers.filter((m) => {
-      const matchesSearch =
-        m.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        m.designation.toLowerCase().includes(searchQuery.toLowerCase())
+    return enrichedMembers
+      .filter((m) => {
+        const matchesSearch =
+          m.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          m.designation.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (m.phone || "").includes(searchQuery.trim())
 
-      if (!matchesSearch) return false
-      if (activeFilter === "paid") return m.status === "paid"
-      if (activeFilter === "pending") return m.status === "pending"
+        if (!matchesSearch) return false
+        if (activeFilter === "paid") return m.status === "paid"
+        if (activeFilter === "pending") return m.status === "pending"
 
-      return true
-    })
+        return true
+      })
+      .sort((a, b) => b.totalPaid - a.totalPaid || a.name.localeCompare(b.name))
   }, [enrichedMembers, searchQuery, activeFilter])
 
   return (
@@ -121,7 +134,7 @@ export function WhatsAppContactList() {
             <Search className="w-4 h-4 absolute left-3 text-slate-400" />
             <input
               type="text"
-              placeholder="Search contact by name or role..."
+              placeholder="Search contact by name, role or mobile..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               autoFocus
@@ -190,20 +203,37 @@ export function WhatsAppContactList() {
                       </span>
                     )}
                   </div>
-                  <p className={`text-xs truncate mt-0.5 font-medium ${expanded ? "text-emerald-800" : "text-slate-500"}`}>
-                    {m.designation}
-                  </p>
+                  <div className="flex items-center gap-1.5 mt-0.5 min-w-0">
+                    <p
+                      className={`text-xs truncate font-medium ${
+                        m.phone
+                          ? expanded
+                            ? "text-emerald-800"
+                            : "text-slate-500"
+                          : "text-slate-400"
+                      }`}
+                    >
+                      {m.phone ? formatPhone(m.phone) : "+91xxxxxxxxxx"}
+                    </p>
+                    {m.phone && (
+                      <a
+                        href={`tel:${m.phone.replace(/\s+/g, "")}`}
+                        onClick={(e) => e.stopPropagation()}
+                        aria-label={`Call ${m.name}`}
+                        title={`Call ${m.name}`}
+                        className="shrink-0 inline-flex items-center justify-center h-5 w-5 rounded-full border border-emerald-500 text-emerald-600 hover:bg-emerald-50 active:scale-90 transition"
+                      >
+                        <Phone className="h-3 w-3" />
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
 
               {/* Right: Payment Status & Chevron Arrow */}
               <div className="flex items-center gap-2 flex-shrink-0 ml-2">
                 <span
-                  className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-bold ${
-                    m.totalPaid > 0
-                      ? "bg-emerald-100 text-emerald-700"
-                      : "bg-red-100 text-red-700"
-                  }`}
+                  className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-bold ${amountTint(m.totalPaid)}`}
                 >
                   {formatINR(m.totalPaid)}
                 </span>
